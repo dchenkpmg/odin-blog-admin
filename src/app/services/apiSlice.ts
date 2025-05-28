@@ -6,14 +6,14 @@ export interface User {
   name: string;
 }
 
-export interface Login {
-  username: string;
-  password: string;
-}
-
 export interface UserResponse {
   user: User;
   token: string;
+}
+
+export interface LoginRequest {
+  username: string;
+  password: string;
 }
 
 export const api = createApi({
@@ -28,7 +28,7 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<UserResponse, Login>({
+    login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
         url: "login",
         method: "POST",

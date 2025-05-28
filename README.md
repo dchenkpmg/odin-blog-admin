@@ -1,3 +1,3 @@
-## blog admin view
+# blog admin view
 
 admin view of blog
