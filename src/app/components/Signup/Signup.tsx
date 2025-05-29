@@ -38,14 +38,18 @@ const Signup = () => {
       alert("Passwords do not match");
       return;
     }
+    console.log("Submitting form with data:", formData);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/admin/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
       if (!response.ok) {
         throw new Error("Signup failed");
       }
@@ -70,6 +74,7 @@ const Signup = () => {
             id="username"
             name="username"
             onChange={handleChange}
+            autoComplete="off"
             required
           />
           <label htmlFor="password">Password</label>
@@ -78,6 +83,7 @@ const Signup = () => {
             id="password"
             name="password"
             onChange={handleChange}
+            autoComplete="off"
             required
           />
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -86,6 +92,7 @@ const Signup = () => {
             id="confirmPassword"
             name="confirmPassword"
             onChange={handleChange}
+            autoComplete="off"
             required
           />
           <button type="submit">Sign Up</button>

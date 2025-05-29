@@ -7,8 +7,9 @@ export interface User {
 }
 
 export interface UserResponse {
-  user: User;
+  userId: number;
   token: string;
+  expiry: string;
 }
 
 export interface LoginRequest {
@@ -18,7 +19,7 @@ export interface LoginRequest {
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "/",
+    baseUrl: import.meta.env.VITE_APP_API_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
@@ -30,15 +31,18 @@ export const api = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
-        url: "login",
+        url: "admin/login",
         method: "POST",
         body: credentials,
       }),
     }),
-    // protected: builder.mutation<{ message: string }, void>({
-    //   query:
-    // })
+    protected: builder.query<{ message: string; status: string }, void>({
+      query: () => ({
+        url: "admin/protected",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = api;
+export const { useLoginMutation, useProtectedQuery } = api;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoginMutation } from "@/app/services/apiSlice";
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/app/hooks";
 import { setCredentials } from "@/features/auth/authSlice";
 import type { LoginRequest } from "@/app/services/apiSlice";
 
@@ -17,14 +17,14 @@ interface LoginFormElement extends HTMLFormElement {
 }
 
 export const LoginPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [login] = useLoginMutation();
+
   const [formData, setFormData] = useState<LoginRequest>({
     username: "",
     password: "",
   });
-
-  const [login] = useLoginMutation();
 
   const handleChange = ({
     target: { name, value },
@@ -36,6 +36,7 @@ export const LoginPage = () => {
     e.preventDefault();
     try {
       const user = await login(formData).unwrap();
+      console.log("User returned successfully!");
       dispatch(setCredentials(user));
       navigate("/home");
     } catch (err) {
@@ -54,6 +55,7 @@ export const LoginPage = () => {
             id="username"
             name="username"
             onChange={handleChange}
+            autoCorrect="on"
             required
           />
           <label htmlFor="password">Password</label>
@@ -62,6 +64,7 @@ export const LoginPage = () => {
             id="password"
             name="password"
             onChange={handleChange}
+            autoComplete="on"
             required
           />
           <button type="submit">Log In</button>

@@ -1,22 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { User } from "../../app/services/apiSlice";
 import type { RootState } from "../../app/store";
 
 export type AuthState = {
-  user: User | null;
+  userId: number | null;
   token: string | null;
+  expiry?: string | null;
+};
+
+const createInitialState = (): AuthState => {
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) {
+    try {
+      return JSON.parse(storedToken) as AuthState; // normally you might zod to validate this
+    } catch {
+      console.error("Failed to parse stored token.");
+    }
+  }
+  return { userId: null, token: null, expiry: null };
 };
 
 const slice = createSlice({
   name: "auth",
-  initialState: { user: null, token: null } as AuthState,
+  initialState: createInitialState() as AuthState,
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; token: string }>,
+      action: PayloadAction<{
+        userId: number;
+        token: string;
+        expiry: string;
+      }>,
     ) => {
-      state.user = action.payload.user;
+      localStorage.setItem("token", JSON.stringify(action.payload));
+      state.userId = action.payload.userId;
+      state.expiry = action.payload.expiry;
       state.token = action.payload.token;
     },
   },
@@ -26,4 +44,4 @@ export const { setCredentials } = slice.actions;
 
 export default slice.reducer;
 
-export const selectUser = (state: RootState) => state.auth.user;
+export const selectUser = (state: RootState) => state.auth.userId;
