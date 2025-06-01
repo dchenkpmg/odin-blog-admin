@@ -17,6 +17,26 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface SignupResponse {
+  status: string;
+}
+
+export interface SignupRequest {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  adminCode: string;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_APP_API_URL,
@@ -29,6 +49,13 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
+    register: builder.mutation<SignupResponse, SignupRequest>({
+      query: (newUser) => ({
+        url: "admin/register",
+        method: "POST",
+        body: newUser,
+      }),
+    }),
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
         url: "admin/login",
@@ -42,7 +69,15 @@ export const api = createApi({
         method: "GET",
       }),
     }),
+    getPosts: builder.query<Post[], void>({
+      query: () => "admin/posts",
+    }),
   }),
 });
 
-export const { useLoginMutation, useProtectedQuery } = api;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useProtectedQuery,
+  useGetPostsQuery,
+} = api;

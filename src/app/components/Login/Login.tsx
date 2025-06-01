@@ -38,7 +38,7 @@ export const LoginPage = () => {
       const user = await login(formData).unwrap();
       console.log("User returned successfully!");
       dispatch(setCredentials(user));
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
     }

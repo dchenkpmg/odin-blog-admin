@@ -1,37 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createEntityAdapter,
+  type EntityState,
+} from "@reduxjs/toolkit";
+
+import { api } from "@/app/services/apiSlice";
 
 export interface Post {
-  id: string;
+  id: number;
   title: string;
   content: string;
   createdAt: string;
   updatedAt: string;
-  author: string;
+  username: string;
 }
 
-const initialState: Post[] = [
-  {
-    id: "1",
-    title: "First Post",
-    content: "This is the content of the first post",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    author: "Alice",
-  },
-  {
-    id: "2",
-    title: "Second Post",
-    content: "This is the content of the second post",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    author: "Bob",
-  },
-];
+const postsAdapter = createEntityAdapter<Post>();
+const initialState = postsAdapter.getInitialState();
 
-const postsSlice = createSlice({
-  name: "posts",
-  initialState,
-  reducers: {},
-});
-
-export default postsSlice.reducer;
+// export const apiSliceWithPosts = api.injectEndpoints({
+//   endpoints: (builder) => ({
+//     getPosts: builder.query<EntityState<Post, number>, void>({
+//       query: () => "/admin/posts",
+//       transformResponse(res: Post[]) {
+//         console.log("Transforming response for posts:", res);
+//         return postsAdapter.setAll(initialState, res);
+//       },
+//     }),
+//   }),
+// });
+//
+// export const { useGetPostsQuery } = apiSliceWithPosts;
+//
+// export const selectPostsResult = apiSliceWithPosts.endpoints.getPosts.select();
+// const selectPostsData = createSelector(
+//   selectPostsResult,
+//   (result) => result.data ?? initialState,
+// );
+//
+// export const { selectAll: selectAllPosts, selectById: selectPostById } =
+//   postsAdapter.getSelectors(selectPostsData);

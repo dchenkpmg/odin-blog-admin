@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useRegisterMutation } from "@/app/services/apiSlice";
 
 interface SignupFormFields extends HTMLFormControlsCollection {
   username: HTMLInputElement;
   password: HTMLInputElement;
   confirmPassword: HTMLInputElement;
+  adminCode: HTMLInputElement;
 }
 
 interface SignupFormElement extends HTMLFormElement {
@@ -15,15 +17,18 @@ interface SignupRequest {
   username: string;
   password: string;
   confirmPassword: string;
+  adminCode: string;
 }
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [register] = useRegisterMutation();
 
   const [formData, setFormData] = useState<SignupRequest>({
     username: "",
     password: "",
     confirmPassword: "",
+    adminCode: "",
   });
 
   const handleChange = ({
@@ -34,34 +39,12 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent<SignupFormElement>) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    console.log("Submitting form with data:", formData);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_API_URL}/admin/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-      if (!response.ok) {
-        throw new Error("Signup failed");
-      }
-      const data = await response.json();
-      console.log("Signup successful:", data);
-    } catch (error) {
-      console.error("Error during signup:", error);
-      alert("Signup failed. Please try again.");
-      return;
+      await register(formData).unwrap();
+      navigate("/login");
+    } catch (err) {
+      console.error("Signpu failed:", err);
     }
-    console.log("Form submitted:", formData);
-    navigate("/login");
   };
 
   return (
@@ -91,6 +74,15 @@ const Signup = () => {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
+            onChange={handleChange}
+            autoComplete="off"
+            required
+          />
+          <label htmlFor="adminCode">Admin Code</label>
+          <input
+            type="password"
+            id="adminCode"
+            name="adminCode"
             onChange={handleChange}
             autoComplete="off"
             required
