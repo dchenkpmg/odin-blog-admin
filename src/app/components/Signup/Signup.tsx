@@ -43,7 +43,7 @@ const Signup = () => {
       await register(formData).unwrap();
       navigate("/login");
     } catch (err) {
-      console.error("Signpu failed:", err);
+      console.error("Signup failed:", err);
     }
   };
 

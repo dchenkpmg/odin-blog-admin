@@ -35,6 +35,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   username: string;
+  published: boolean;
 }
 
 export const api = createApi({
@@ -64,13 +65,13 @@ export const api = createApi({
       }),
     }),
     protected: builder.query<{ message: string; status: string }, void>({
-      query: () => ({
-        url: "admin/protected",
-        method: "GET",
-      }),
+      query: () => "admin/protected",
     }),
     getPosts: builder.query<Post[], void>({
-      query: () => "admin/posts",
+      query: () => "/posts",
+    }),
+    getPost: builder.query<Post, number>({
+      query: (id) => `/posts/${id}`,
     }),
   }),
 });
@@ -80,4 +81,5 @@ export const {
   useLoginMutation,
   useProtectedQuery,
   useGetPostsQuery,
+  useGetPostQuery,
 } = api;
