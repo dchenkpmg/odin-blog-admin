@@ -17,7 +17,7 @@ function PostExcerpt({ post }: PostExcerptProps) {
         <Link to={`/posts/${post.id}`}>{post.title}</Link>
       </h3>
       <div>
-        <PostAuthor username={post.username} />
+        <PostAuthor username={post.author.username} />
         <TimeAgo timestamp={post.createdAt} />
         <span className="edit-post">
           <span>&nbsp; </span>
