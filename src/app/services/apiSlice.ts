@@ -41,7 +41,7 @@ export type NewPost = Omit<
   Post,
   "id" | "createdAt" | "updatedAt" | "author"
 > & {
-  userId: number;
+  userId?: number;
 };
 
 export interface Comment {
@@ -51,6 +51,13 @@ export interface Comment {
   updatedAt: string;
   author: Author;
 }
+export type NewComment = Omit<
+  Comment,
+  "id" | "createdAt" | "updatedAt" | "author"
+> & {
+  postId: number;
+  userId?: number;
+};
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -88,6 +95,7 @@ export const api = createApi({
     }),
     getPost: builder.query<Post, number>({
       query: (id) => `/posts/${id}`,
+      providesTags: ["Post"],
     }),
     addPost: builder.mutation<Post, NewPost>({
       query: (newPost) => ({
@@ -97,9 +105,49 @@ export const api = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
+    editPost: builder.mutation<Post, { post: NewPost; id: number }>({
+      query: ({ post, id }) => ({
+        url: `/edit/${id}`,
+        method: "POST",
+        body: post,
+      }),
+      invalidatesTags: ["Post"],
+    }),
+    deletePost: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Post"],
+    }),
+    changePostStatus: builder.mutation<boolean, number>({
+      query: (id) => ({
+        url: `/post-status/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Post"],
+    }),
     getComments: builder.query<Comment[], number>({
       query: (id) => `/posts/${id}/comments`,
       providesTags: ["Comment"],
+    }),
+    postComment: builder.mutation<
+      Comment,
+      { postId: number; newComment: NewComment }
+    >({
+      query: ({ postId, newComment }) => ({
+        url: `/posts/${postId}/comments`,
+        method: "POST",
+        body: newComment,
+      }),
+      invalidatesTags: ["Comment"],
+    }),
+    deleteComment: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/comments/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Comment"],
     }),
   }),
 });
@@ -112,4 +160,9 @@ export const {
   useGetPostQuery,
   useGetCommentsQuery,
   useAddPostMutation,
+  useEditPostMutation,
+  useDeletePostMutation,
+  useChangePostStatusMutation,
+  usePostCommentMutation,
+  useDeleteCommentMutation,
 } = api;

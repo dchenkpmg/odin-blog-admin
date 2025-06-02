@@ -1,5 +1,8 @@
 import "./Home.css";
-import { useGetPostsQuery } from "@/app/services/apiSlice";
+import {
+  useGetPostsQuery,
+  useDeletePostMutation,
+} from "@/app/services/apiSlice";
 import type { Post } from "@/app/services/apiSlice";
 import { useMemo } from "react";
 import { Link } from "react-router";
@@ -11,6 +14,16 @@ interface PostExcerptProps {
 }
 
 function PostExcerpt({ post }: PostExcerptProps) {
+  const [deletePost] = useDeletePostMutation();
+
+  const handleDelete = async () => {
+    try {
+      await deletePost(post.id).unwrap();
+    } catch (err) {
+      console.error("Failed to delete the post:", err);
+    }
+  };
+
   return (
     <article className="post-excerpt">
       <h3>
@@ -19,22 +32,18 @@ function PostExcerpt({ post }: PostExcerptProps) {
       <div>
         <PostAuthor username={post.author.username} />
         <TimeAgo timestamp={post.createdAt} />
+        <span className="post-status">
+          &nbsp;|&nbsp;
+          {post.published ? "Published" : "Unpublished"}
+        </span>
         <span className="edit-post">
           <span>&nbsp; </span>
           <Link to={`/edit/${post.id}`}>Edit Post</Link>
           <span>&nbsp; </span>
-          <Link to={`/delete/${post.id}`}>Delete Post</Link>
+          <button className="delete-post" onClick={handleDelete}>
+            Delete Post
+          </button>
         </span>
-        <span>&nbsp;</span>
-        {post.published ? (
-          <button className="change-status">
-            <a href={`/post-status/${post.id}`}>Published</a>
-          </button>
-        ) : (
-          <button className="change-status">
-            <a href={`/post-status/${post.id}`}>Unpublished</a>
-          </button>
-        )}
       </div>
       <p className="post-content">{post.content.substring(0, 100)}...</p>
     </article>
@@ -69,7 +78,6 @@ function Home() {
   }
   return (
     <>
-      <h1>On the Bleeding Edge</h1>
       <span>
         <Link to="/create-post">Create New Post</Link>
       </span>

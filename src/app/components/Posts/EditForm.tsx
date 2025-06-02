@@ -1,20 +1,24 @@
-import { useAddPostMutation } from "@/app/services/apiSlice";
-import { useNavigate } from "react-router";
+import { useEditPostMutation } from "@/app/services/apiSlice";
+import { useNavigate, useParams } from "react-router";
 import { useAppSelector } from "@/app/hooks";
-import { useState } from "react";
-import { type NewPost } from "@/app/services/apiSlice";
+import { useState, useEffect } from "react";
+import { type NewPost, useGetPostQuery } from "@/app/services/apiSlice";
+import { Link } from "react-router";
 
-export interface CreateFormElements extends HTMLFormControlsCollection {
+export interface EditFormElements extends HTMLFormControlsCollection {
   title: HTMLInputElement;
   content: HTMLTextAreaElement;
+  published: HTMLInputElement;
 }
 
-export interface CreateForm extends HTMLFormElement {
-  readonly elements: CreateFormElements;
+export interface EditForm extends HTMLFormElement {
+  readonly elements: EditFormElements;
 }
 
 export default function CreateForm() {
-  const [addPost] = useAddPostMutation();
+  const [editPost] = useEditPostMutation();
+  const { postId } = useParams();
+  const { data: post, isSuccess } = useGetPostQuery(parseInt(postId!));
   const userId = useAppSelector((state) => state.auth.userId);
   const [formData, setFormData] = useState<NewPost>({
     title: "",
@@ -24,31 +28,46 @@ export default function CreateForm() {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isSuccess && post) {
+      setFormData({
+        title: post.title,
+        content: post.content,
+        userId: userId!,
+        published: post.published,
+      });
+    }
+  }, [isSuccess, post, userId]);
+
   const handleChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (event: React.FormEvent<CreateForm>) => {
+  const handleSubmit = async (event: React.FormEvent<EditForm>) => {
     event.preventDefault();
     try {
-      await addPost(formData).unwrap();
-      navigate("/");
+      await editPost({ post: formData, id: parseInt(postId!) }).unwrap();
+      navigate(`/posts/${postId}`);
     } catch (err) {
-      console.error("Post creation failed:", err);
+      console.error("Post edit failed:", err);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Create New Post</h2>
+      <h2>Edit Post</h2>
+      <span className="subtitle">
+        <Link to={`/posts/${postId}`}>Back to Post</Link>
+      </span>
       <div>
         <label htmlFor="title">Title:</label>
         <input
           type="text"
           id="title"
           name="title"
+          value={formData.title}
           onChange={handleChange}
           required
         />
@@ -58,6 +77,7 @@ export default function CreateForm() {
         <textarea
           id="content"
           name="content"
+          value={formData.content}
           onChange={handleChange}
           required
         ></textarea>
@@ -77,7 +97,7 @@ export default function CreateForm() {
           }
         />
       </div>
-      <button type="submit">Create Post</button>
+      <button type="submit">Submit Post</button>
     </form>
   );
 }

@@ -3,10 +3,12 @@ import { useNavigate } from "react-router";
 import { useAppSelector } from "@/app/hooks";
 import { useState } from "react";
 import { type NewPost } from "@/app/services/apiSlice";
+import { Link } from "react-router";
 
 export interface CreateFormElements extends HTMLFormControlsCollection {
   title: HTMLInputElement;
   content: HTMLTextAreaElement;
+  published: HTMLInputElement;
 }
 
 export interface CreateForm extends HTMLFormElement {
@@ -43,6 +45,9 @@ export default function CreateForm() {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Create New Post</h2>
+      <span className="subtitle">
+        <Link to="/">Back to Home</Link>
+      </span>
       <div>
         <label htmlFor="title">Title:</label>
         <input
@@ -77,7 +82,7 @@ export default function CreateForm() {
           }
         />
       </div>
-      <button type="submit">Create Post</button>
+      <button type="submit">Submit Post</button>
     </form>
   );
 }
