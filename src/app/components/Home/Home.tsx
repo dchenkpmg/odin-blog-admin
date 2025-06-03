@@ -50,7 +50,11 @@ function PostExcerpt({ post }: PostExcerptProps) {
           </button>
         </span>
       </div>
-      <p className={styles.postContent}>{post.content.substring(0, 100)}...</p>
+      <p className={styles.postContent}>
+        {post.content.length > 100
+          ? post.content.substring(0, 100) + "..."
+          : post.content}
+      </p>
     </article>
   );
 }
