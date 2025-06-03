@@ -21,9 +21,28 @@ interface SignupRequest {
   adminCode: string;
 }
 
+interface ValidationError {
+  location: string;
+  msg: string;
+  path: string;
+  type: string;
+  value: string;
+}
+
+type ValidationErrors = ValidationError[];
+
 const Signup = () => {
   const navigate = useNavigate();
-  const [register] = useRegisterMutation();
+  const [errorMessage, setErrorMessage] = useState<ValidationErrors>([
+    {
+      location: "",
+      msg: "",
+      path: "",
+      type: "",
+      value: "",
+    },
+  ]);
+  const [register, { isError }] = useRegisterMutation();
 
   const [formData, setFormData] = useState<SignupRequest>({
     username: "",
@@ -44,6 +63,27 @@ const Signup = () => {
       await register(formData).unwrap();
       navigate("/login");
     } catch (err) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "data" in err &&
+        err.data &&
+        typeof err.data === "object" &&
+        "errors" in err.data
+      ) {
+        setErrorMessage(err.data.errors as ValidationErrors);
+        console.error("Validation errors:", err.data.errors);
+      } else {
+        setErrorMessage([
+          {
+            location: "form",
+            msg: "An unexpected error occurred. Please try again.",
+            path: "",
+            type: "",
+            value: "",
+          },
+        ]);
+      }
       console.error("Signup failed:", err);
     }
   };
@@ -52,6 +92,15 @@ const Signup = () => {
     <main className={styles.signupMain}>
       <section className={styles.formSection}>
         <h2 className={styles.formTitle}>Admin Signup</h2>
+        <div className={styles.errorMessage}>
+          {isError && errorMessage.length > 0
+            ? errorMessage.map((error, index) => (
+                <p key={index} className={styles.errorText}>
+                  {error.msg}
+                </p>
+              ))
+            : "Please fill out the form to create an admin account."}
+        </div>
         <form className={styles.signupForm} onSubmit={handleSubmit}>
           <label htmlFor="username">Username</label>
           <input

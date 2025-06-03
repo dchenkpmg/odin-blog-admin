@@ -19,7 +19,7 @@ interface LoginFormElement extends HTMLFormElement {
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [login] = useLoginMutation();
+  const [login, { isError }] = useLoginMutation();
 
   const [formData, setFormData] = useState<LoginRequest>({
     username: "",
@@ -55,6 +55,9 @@ export const LoginPage = () => {
           />
           <h2>Admin Login</h2>
           <p className={styles.loginSubtitle}>Sign in to manage your blog</p>
+          <p className={styles.errorMessage}>
+            {isError && "Login failed. Please check your credentials."}
+          </p>
         </div>
         <form className={styles.loginForm} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
