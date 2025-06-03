@@ -26,7 +26,7 @@ export function CommentsList({ comments }: CommentsListProps) {
           <div key={comment.id} className={styles.comment}>
             <div className={styles.commentHeader}>
               <span className={styles.author}>
-                <strong>{comment.author.username}</strong>
+                <strong>{comment.author?.username ?? "Anonymous"}</strong>
               </span>
               <button
                 className={styles.deleteComment}

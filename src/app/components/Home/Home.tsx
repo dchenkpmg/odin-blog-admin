@@ -18,7 +18,10 @@ function PostExcerpt({ post }: PostExcerptProps) {
 
   const handleDelete = async () => {
     try {
-      await deletePost(post.id).unwrap();
+      if (window.confirm("Are you sure you want to delete this comment?")) {
+        await deletePost(post.id).unwrap();
+      }
+      // await deletePost(post.id).unwrap();
     } catch (err) {
       console.error("Failed to delete the post:", err);
     }
