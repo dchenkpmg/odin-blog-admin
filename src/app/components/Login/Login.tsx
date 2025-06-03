@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/app/hooks";
 import { setCredentials } from "@/features/auth/authSlice";
 import type { LoginRequest } from "@/app/services/apiSlice";
 
-import "./Login.module.css";
+import styles from "./Login.module.css";
 
 interface LoginFormFields extends HTMLFormControlsCollection {
   username: HTMLInputElement;
@@ -45,33 +45,51 @@ export const LoginPage = () => {
   };
 
   return (
-    <main>
-      <section className="formSection">
-        <form className="loginForm" onSubmit={handleSubmit}>
-          <h2>Log in to access the admin view</h2>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            onChange={handleChange}
-            autoCorrect="on"
-            required
+    <main className={styles.loginMain}>
+      <section className={styles.loginCard}>
+        <div className={styles.loginCardHeader}>
+          <img
+            src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4dd.png"
+            alt="Login"
+            className={styles.loginIcon}
           />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            onChange={handleChange}
-            autoComplete="on"
-            required
-          />
-          <button type="submit">Log In</button>
+          <h2>Admin Login</h2>
+          <p className={styles.loginSubtitle}>Sign in to manage your blog</p>
+        </div>
+        <form className={styles.loginForm} onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              onChange={handleChange}
+              autoComplete="on"
+              required
+              autoFocus
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              onChange={handleChange}
+              autoComplete="on"
+              required
+            />
+          </div>
+          <button type="submit" className={styles.loginButton}>
+            Log In
+          </button>
         </form>
-        <a href="/signup" className="homeLink">
-          Sign Up
-        </a>
+        <div className={styles.loginFooter}>
+          <span>Don&apos;t have an account?</span>
+          <a href="/signup" className={styles.signupLink}>
+            Sign Up
+          </a>
+        </div>
       </section>
     </main>
   );

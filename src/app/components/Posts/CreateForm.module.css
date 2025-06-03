@@ -1,4 +1,4 @@
-.signupMain {
+.createFormWrapper {
   min-height: 100vh;
   background: linear-gradient(120deg, #f1f5f9 0%, #e0e7ef 100%);
   display: flex;
@@ -6,27 +6,17 @@
   justify-content: center;
 }
 
-.formSection {
-  max-width: 370px;
-  margin: 0 auto;
+.createForm {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(60, 60, 120, 0.1);
   padding: 2.5rem 2.2rem 2rem 2.2rem;
+  max-width: 500px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 1.3rem;
   animation: fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.formTitle {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #3730a3;
-  margin-bottom: 0.2rem;
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
 }
 
 @keyframes fadeIn {
@@ -40,22 +30,36 @@
   }
 }
 
-.signupForm {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+.createForm h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 0.2rem;
+  text-align: center;
 }
 
-.signupForm label {
+.subtitle {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  text-align: center;
+  display: block;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.formGroup label {
   font-size: 1rem;
   color: #3730a3;
   font-weight: 500;
-  margin-bottom: 0.2rem;
 }
 
-.signupForm input[type="text"],
-.signupForm input[type="password"] {
+.formGroup input[type="text"],
+.formGroup textarea {
   padding: 0.7rem 0.9rem;
   border: 1.5px solid #e0e7ef;
   border-radius: 7px;
@@ -65,15 +69,35 @@
     border 0.2s,
     background 0.2s;
   outline: none;
+  resize: vertical;
 }
 
-.signupForm input[type="text"]:focus,
-.signupForm input[type="password"]:focus {
+.formGroup input[type="text"]:focus,
+.formGroup textarea:focus {
   border: 1.5px solid #6366f1;
   background: #fff;
 }
 
-.signupForm button[type="submit"] {
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.checkboxGroup label {
+  margin: 0;
+  font-size: 1rem;
+  color: #3730a3;
+}
+
+input[type="checkbox"] {
+  accent-color: #6366f1;
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.createButton {
   margin-top: 0.5rem;
   padding: 0.75rem 0;
   background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
@@ -89,7 +113,7 @@
     box-shadow 0.2s;
 }
 
-.signupForm button[type="submit"]:hover {
+.createButton:hover {
   background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.13);
 }

@@ -36,6 +36,9 @@ ol[role="list"] {
 body {
   min-height: 100vh;
   line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", Arial, sans-serif;
 }
 
 /* Set shorter line heights on headings and interactive elements */

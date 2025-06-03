@@ -1,9 +1,12 @@
 import { Link } from "react-router";
+import styles from "./Header.module.css";
 
 export default function Header() {
   return (
-    <h1 className="title">
-      <Link to={"/"}>Wordpress 2</Link>
-    </h1>
+    <header className={styles.header}>
+      <h1 className={styles.title}>
+        <Link to={"/"}>Blog App</Link>
+      </h1>
+    </header>
   );
 }

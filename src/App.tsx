@@ -7,11 +7,22 @@ import CreateForm from "./app/components/Posts/CreateForm";
 import Signup from "./app/components/Signup/Signup";
 import RequireAuth from "./app/components/RequireAuth/RequireAuth";
 import Header from "./app/components/Header/Header";
+import { useLocation } from "react-router";
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      <Content />
+    </BrowserRouter>
+  );
+}
+
+function Content() {
+  const location = useLocation();
+  return (
+    <>
+      {!location.pathname.includes("/login") &&
+        !location.pathname.includes("/signup") && <Header />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -48,7 +59,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

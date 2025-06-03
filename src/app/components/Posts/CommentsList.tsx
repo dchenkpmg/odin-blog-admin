@@ -1,5 +1,6 @@
 import type { Comment } from "@/app/services/apiSlice";
 import { useDeleteCommentMutation } from "@/app/services/apiSlice";
+import styles from "./CommentsList.module.css";
 
 interface CommentsListProps {
   comments: Comment[];
@@ -19,27 +20,29 @@ export function CommentsList({ comments }: CommentsListProps) {
   };
 
   return (
-    <div className="comments-list">
+    <div className={styles.commentsList}>
       {comments.length > 0 ? (
         comments.map((comment) => (
-          <div key={comment.id} className="comment">
-            <p>
-              <strong>{comment.author.username}</strong>:
-            </p>
-            <button
-              className="delete-comment"
-              onClick={() => handleDelete(comment)}
-            >
-              Delete
-            </button>
-            <p>{comment.content}</p>
-            <span className="comment-date">
+          <div key={comment.id} className={styles.comment}>
+            <div className={styles.commentHeader}>
+              <span className={styles.author}>
+                <strong>{comment.author.username}</strong>
+              </span>
+              <button
+                className={styles.deleteComment}
+                onClick={() => handleDelete(comment)}
+              >
+                Delete
+              </button>
+            </div>
+            <div className={styles.content}>{comment.content}</div>
+            <span className={styles.commentDate}>
               {new Date(comment.createdAt).toLocaleDateString()}
             </span>
           </div>
         ))
       ) : (
-        <p>No comments yet.</p>
+        <p className={styles.noComments}>No comments yet.</p>
       )}
     </div>
   );

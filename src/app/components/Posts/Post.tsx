@@ -1,6 +1,4 @@
-import React from "react";
-import { useState } from "react";
-import { useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useAppSelector } from "@/app/hooks";
 import type { NewComment } from "@/app/services/apiSlice";
 import {
@@ -11,6 +9,7 @@ import {
 import { useParams } from "react-router";
 import { PostContent } from "./PostContent";
 import { CommentsList } from "./CommentsList";
+import styles from "./Post.module.css";
 
 function Post() {
   const [addComment] = usePostCommentMutation();
@@ -47,19 +46,21 @@ function Post() {
   let commentList: React.ReactNode;
 
   if (postIsLoading) {
-    content = <div>Loading...</div>;
+    content = <div className={styles.loading}>Loading...</div>;
   } else if (postIsSuccess) {
     content = <PostContent post={post} />;
   } else if (postIsError) {
-    content = <div>Error: {postError.toString()}</div>;
+    content = <div className={styles.error}>Error: {postError.toString()}</div>;
   }
 
   if (commentsIsLoading) {
-    commentList = <div>Comments are loading...</div>;
+    commentList = <div className={styles.loading}>Comments are loading...</div>;
   } else if (commentsIsSuccess) {
     commentList = <CommentsList comments={sortedComments} />;
   } else if (commentsIsError) {
-    commentList = <div>Error: {commentsError.toString()}</div>;
+    commentList = (
+      <div className={styles.error}>Error: {commentsError.toString()}</div>
+    );
   }
 
   const handleChange = ({
@@ -75,25 +76,27 @@ function Post() {
         postId: parseInt(postId!),
         newComment: formData,
       }).unwrap();
+      setFormData((prev) => ({ ...prev, content: "" }));
     } catch (err) {
       console.error("Comment submission failed:", err);
     }
   };
 
   return (
-    <div className="post-wrapper">
-      <article className="post">{content}</article>
-      <section className="post-comments">
-        <h3>Comments</h3>
+    <div className={styles.postWrapper}>
+      <article className={styles.post}>{content}</article>
+      <section className={styles.postComments}>
+        <h3 className={styles.commentsTitle}>Comments</h3>
         {commentList}
       </section>
-      <form className="comment-form" onSubmit={handleSubmit}>
+      <form className={styles.commentForm} onSubmit={handleSubmit}>
         <textarea
-          className="comment-input"
+          className={styles.commentInput}
           placeholder="Add a comment..."
           onChange={handleChange}
+          value={formData.content}
         ></textarea>
-        <button type="submit" className="comment-submit">
+        <button type="submit" className={styles.commentSubmit}>
           Submit Comment
         </button>
       </form>

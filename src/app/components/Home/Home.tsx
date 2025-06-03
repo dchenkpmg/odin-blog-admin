@@ -1,4 +1,4 @@
-import "./Home.css";
+import styles from "./Home.module.css";
 import {
   useGetPostsQuery,
   useDeletePostMutation,
@@ -25,27 +25,29 @@ function PostExcerpt({ post }: PostExcerptProps) {
   };
 
   return (
-    <article className="post-excerpt">
-      <h3>
-        <Link to={`/posts/${post.id}`}>{post.title}</Link>
+    <article className={styles.postExcerpt}>
+      <h3 className={styles.postTitle}>
+        <Link to={`/posts/${post.id}`} className={styles.postLink}>
+          {post.title}
+        </Link>
       </h3>
-      <div>
+      <div className={styles.postMeta}>
         <PostAuthor username={post.author.username} />
         <TimeAgo timestamp={post.createdAt} />
-        <span className="post-status">
+        <span className={styles.postStatus}>
           &nbsp;|&nbsp;
           {post.published ? "Published" : "Unpublished"}
         </span>
-        <span className="edit-post">
-          <span>&nbsp; </span>
-          <Link to={`/edit/${post.id}`}>Edit Post</Link>
-          <span>&nbsp; </span>
-          <button className="delete-post" onClick={handleDelete}>
+        <span className={styles.editPost}>
+          <Link to={`/edit/${post.id}`} className={styles.editLink}>
+            Edit Post
+          </Link>
+          <button className={styles.deletePost} onClick={handleDelete}>
             Delete Post
           </button>
         </span>
       </div>
-      <p className="post-content">{post.content.substring(0, 100)}...</p>
+      <p className={styles.postContent}>{post.content.substring(0, 100)}...</p>
     </article>
   );
 }
@@ -68,21 +70,22 @@ function Home() {
   let content: React.ReactNode;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
+    content = <div className={styles.loading}>Loading...</div>;
   } else if (isSuccess) {
     content = sortedPosts.map((post) => (
       <PostExcerpt key={post.id} post={post} />
     ));
   } else if (isError) {
-    content = <div>Error: {error.toString()}</div>;
+    content = <div className={styles.error}>Error: {error.toString()}</div>;
   }
+
   return (
-    <>
-      <span>
+    <div className={styles.homeWrapper}>
+      <span className={styles.createPostLink}>
         <Link to="/create-post">Create New Post</Link>
       </span>
       {content}
-    </>
+    </div>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useRegisterMutation } from "@/app/services/apiSlice";
+import styles from "./Signup.module.css";
 
 interface SignupFormFields extends HTMLFormControlsCollection {
   username: HTMLInputElement;
@@ -48,9 +49,10 @@ const Signup = () => {
   };
 
   return (
-    <main className="signupMain">
-      <section className="formSection">
-        <form className="signupForm" onSubmit={handleSubmit}>
+    <main className={styles.signupMain}>
+      <section className={styles.formSection}>
+        <h2 className={styles.formTitle}>Admin Signup</h2>
+        <form className={styles.signupForm} onSubmit={handleSubmit}>
           <label htmlFor="username">Username</label>
           <input
             type="text"

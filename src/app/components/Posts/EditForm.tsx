@@ -4,6 +4,7 @@ import { useAppSelector } from "@/app/hooks";
 import { useState, useEffect } from "react";
 import { type NewPost, useGetPostQuery } from "@/app/services/apiSlice";
 import { Link } from "react-router";
+import styles from "./EditForm.module.css";
 
 export interface EditFormElements extends HTMLFormControlsCollection {
   title: HTMLInputElement;
@@ -56,48 +57,52 @@ export default function CreateForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Edit Post</h2>
-      <span className="subtitle">
-        <Link to={`/posts/${postId}`}>Back to Post</Link>
-      </span>
-      <div>
-        <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="content">Content:</label>
-        <textarea
-          id="content"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-          required
-        ></textarea>
-      </div>
-      <div>
-        <label htmlFor="published">Published:</label>
-        <input
-          type="checkbox"
-          id="published"
-          name="published"
-          checked={formData.published}
-          onChange={({ target: { name, checked } }) =>
-            setFormData((prev) => ({
-              ...prev,
-              [name]: checked,
-            }))
-          }
-        />
-      </div>
-      <button type="submit">Submit Post</button>
-    </form>
+    <div className={styles.editFormWrapper}>
+      <form onSubmit={handleSubmit} className={styles.editForm}>
+        <h2>Edit Post</h2>
+        <span className={styles.subtitle}>
+          <Link to={`/posts/${postId}`}>Back to Post</Link>
+        </span>
+        <div className={styles.formGroup}>
+          <label htmlFor="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="content">Content:</label>
+          <textarea
+            id="content"
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            required
+          ></textarea>
+        </div>
+        <div className={styles.checkboxGroup}>
+          <input
+            type="checkbox"
+            id="published"
+            name="published"
+            checked={formData.published}
+            onChange={({ target: { name, checked } }) =>
+              setFormData((prev) => ({
+                ...prev,
+                [name]: checked,
+              }))
+            }
+          />
+          <label htmlFor="published">Published</label>
+        </div>
+        <button type="submit" className={styles.editButton}>
+          Submit Post
+        </button>
+      </form>
+    </div>
   );
 }
